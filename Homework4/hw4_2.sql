@@ -12,11 +12,16 @@ town_id int not null
 
 create table orders(
 id int primary key auto_increment,
-name varchar(120) not null,
+order_name_id int not null,
 category_id int not null,
 quality_id int not null,
 factory_id int not null,
 garanty_id int
+);
+
+create table order_names(
+id int primary key auto_increment,
+order_name varchar(70)
 );
 
 create table customers_orders(
@@ -63,6 +68,7 @@ alter table towns add foreign key(country_id) references countries(id);
 alter table orders add foreign key(quality_id) references qualities(id);
 alter table orders add foreign key(factory_id) references factories(id);
 alter table orders add foreign key(garanty_id) references garanties(id);
+alter table orders add foreign key(order_name_id) references order_names(id);
 
 insert into categories(name)
 values
@@ -106,12 +112,19 @@ values
 ("Сергій","Іващук",2),
 ("Анна","Хоменко",3);
 
-insert into orders(name,category_id,quality_id,factory_id,garanty_id)
+insert into order_names(order_name)
 values
-("Ведмедик",2,1,2,3),
-("Телевізор",1,2,1,1),
-("Пральна машина",1,2,1,2),
-("Праска",1,1,1,1);
+("Ведмедик"),
+("Телевізор"),
+("Пральна машина"),
+("Праска");
+
+insert into orders(order_name_id,category_id,quality_id,factory_id,garanty_id)
+values
+(1,2,1,2,3),
+(2,1,2,1,1),
+(3,1,2,1,2),
+(4,1,1,1,1);
 
 insert into customers_orders(customer_id,order_id)
 values
