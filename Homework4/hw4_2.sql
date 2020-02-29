@@ -7,17 +7,21 @@ create table customers(
 id int primary key auto_increment,
 customer_name varchar(30) not null,
 customer_surname varchar(30),
-town_id int not null,
-country_id int not null
+town_id int not null
 );
 
 create table orders(
+id int primary key auto_increment,
 name varchar(120) not null,
-customer_id int not null,
 category_id int not null,
 quality_id int not null,
 factory_id int not null,
 garanty_id int
+);
+
+create table customers_orders(
+customer_id int not null,
+order_id int not null
 );
 
 create table categories(
@@ -27,7 +31,8 @@ name varchar(50) not null
 
 create table towns(
 id int primary key auto_increment,
-name varchar(80) not null
+name varchar(80) not null,
+country_id int not null
 );
 
 create table countries(
@@ -50,10 +55,11 @@ id int primary key auto_increment,
 years int not null
 ); 
 
-alter table orders add foreign key(customer_id) references customers(id);
+alter table customers_orders add foreign key(customer_id) references customers(id);
+alter table customers_orders add foreign key(order_id) references orders(id);
 alter table orders add foreign key(category_id) references categories(id);
 alter table customers add foreign key(town_id) references towns(id);
-alter table customers add foreign key(country_id) references countries(id);
+alter table towns add foreign key(country_id) references countries(id);
 alter table orders add foreign key(quality_id) references qualities(id);
 alter table orders add foreign key(factory_id) references factories(id);
 alter table orders add foreign key(garanty_id) references garanties(id);
@@ -64,17 +70,17 @@ values
 ("Іграшки"),
 ("Побутова хімія");
 
-insert into towns(name)
-values
-("Львів"),
-("Київ"),
-("Берлін");
-
 insert into countries(name)
 values
 ("Німеччина"),
 ("Україна"),
 ("Польща");
+
+insert into towns(name,country_id)
+values
+("Львів",2),
+("Київ",2),
+("Берлін",1);
 
 insert into qualities(type)
 values
@@ -94,18 +100,25 @@ values
 (3),
 (2);
 
-insert into customers(customer_name,customer_surname,town_id,country_id)
+insert into customers(customer_name,customer_surname,town_id)
 values
-("Іван","Петренко",1,2),
-("Сергій","Іващук",2,2),
-("Анна","Хоменко",3,1);
+("Іван","Петренко",1),
+("Сергій","Іващук",2),
+("Анна","Хоменко",3);
 
-insert into orders(name,customer_id,category_id,quality_id,factory_id,garanty_id)
+insert into orders(name,category_id,quality_id,factory_id,garanty_id)
 values
-("Ведмедик",1,2,1,2,3),
-("Телевізор",1,1,2,1,1),
-("Пральна машина",2,1,2,1,2),
-("Праска",3,1,1,1,1);
+("Ведмедик",2,1,2,3),
+("Телевізор",1,2,1,1),
+("Пральна машина",1,2,1,2),
+("Праска",1,1,1,1);
+
+insert into customers_orders(customer_id,order_id)
+values
+(1,2),
+(1,3),
+(2,1),
+(3,4);
 
 select * from orders;
 select * from customers;
@@ -115,6 +128,7 @@ select * from countries;
 select * from towns;
 select * from garanties;
 select * from qualities;
+select * from customers_orders;
 
 
 
